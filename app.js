@@ -1,9 +1,18 @@
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 
 // Middelware to handle logs
 const morgan = require("morgan");
 app.use(morgan("dev"));
+
+// Connect the database
+mongoose.connect(
+	`mongodb+srv://bs:${process.env.MONGO_PASS}@rest-api-bs-isfee.mongodb.net/rest-api-bs?retryWrites=true&w=majority`,
+	{
+		useMongoClient: true,
+	}
+);
 
 // parse body data in json format
 app.use(express.urlencoded());
