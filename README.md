@@ -1,3 +1,3 @@
-# rest-api-node-express
+# Rest-api-node-express
 
 Creating a restful APi with Nodejs

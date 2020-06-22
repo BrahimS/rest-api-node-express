@@ -8,6 +8,10 @@ router.get("/", (request, response, next) => {
 	});
 });
 router.post("/", (request, response, next) => {
+	const order = {
+		productID: request.body.productID,
+		quantity: request.body.quantity,
+	};
 	response.status(201).json({
 		message: "Orders were Posted",
 	});
@@ -16,7 +20,7 @@ router.post("/", (request, response, next) => {
 router.get("/:orderId", (request, response, next) => {
 	response.status(200).json({
 		message: "Orders details",
-		orderId: request.params.orderId,
+		Order: order,
 	});
 });
 router.post("/:orderId", (request, response, next) => {

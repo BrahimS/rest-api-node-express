@@ -8,8 +8,14 @@ router.get("/", (request, response, next) => {
 	});
 });
 router.post("/", (request, response, next) => {
+	const product = {
+		title: request.body.title,
+		price: request.body.price,
+		desc: request.body.desc,
+	};
 	response.status(201).json({
 		masssage: "Post data into the products page",
+		createdProduct: product,
 	});
 });
 router.get("/:productId", (request, response, next) => {
