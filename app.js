@@ -11,6 +11,8 @@ mongoose.connect(
 	`mongodb+srv://bs:${process.env.MONGO_PASS}@rest-api-bs-isfee.mongodb.net/rest-api-bs?retryWrites=true&w=majority`,
 	{
 		useMongoClient: true,
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
 	}
 );
 
