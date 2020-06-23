@@ -15,6 +15,7 @@ mongoose.connect(
 		useUnifiedTopology: true,
 	}
 );
+mongoose.Promise = global.Promise;
 
 // parse body data in json format
 app.use(express.urlencoded());

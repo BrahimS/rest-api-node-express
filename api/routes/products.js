@@ -7,10 +7,25 @@ const Product = require("../models/products");
 // Handle Products requests
 router.get("/", (request, response, next) => {
 	Product.find()
+		.select("name price desc")
 		.exec()
-		.then((doc) => {
-			console.log(doc.length);
-			response.status(200).json(doc);
+		.then((docs) => {
+			const theResponse = {
+				count: docs.length,
+				products: docs.map((doc) => {
+					return {
+						name: doc.name,
+						price: doc.price,
+						desc: doc.desc,
+						_id: doc._id,
+						request: {
+							type: "GET",
+							url: `http://localhost:3000/products/${doc._id}`,
+						},
+					};
+				}),
+			};
+			response.status(200).json(theResponse);
 		})
 		.catch((err) => {
 			console.log(err);
@@ -33,7 +48,16 @@ router.post("/", (request, response, next) => {
 			console.log(result);
 			response.status(201).json({
 				masssage: "Post data into the products page",
-				createdProduct: result,
+				createdProduct: {
+					name: result.name,
+					price: result.price,
+					desc: result.desc,
+					_id: result._id,
+					request: {
+						type: "POST",
+						url: `http://localhost:3000/products/${result._id}`,
+					},
+				},
 			});
 		})
 		.catch((err) => {
@@ -44,10 +68,17 @@ router.post("/", (request, response, next) => {
 router.get("/:productId", (request, response, next) => {
 	const id = request.params.productId;
 	Product.findById(id)
+		.select("name price desc")
 		.exec()
 		.then((doc) => {
 			console.log(doc);
-			response.status(200).json(doc);
+			response.status(200).json({
+				product: doc,
+				request: {
+					type: "GET",
+					url: `http://localhost:3000/products/${doc._id}`,
+				},
+			});
 		})
 		.catch((err) => {
 			response.status(500).json({ error: err });
@@ -59,12 +90,7 @@ router.patch("/:productId", (request, response, next) => {
 		optionsToUpdate[opt.propName] = opt.value;
 	}
 	const id = request.params.productId;
-	Product.update(
-		{ _id: id },
-		{
-			$set: optionsToUpdate,
-		}
-	)
+	Product.update({ _id: id }, { $set: optionsToUpdate })
 		.exec()
 		.then((result) => {
 			console.log(result);
