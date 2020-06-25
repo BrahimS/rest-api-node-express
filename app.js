@@ -22,6 +22,9 @@ mongoose.Promise = global.Promise
 app.use(express.urlencoded())
 app.use(express.json())
 
+// Make Static files publicly available
+app.use('/uploads', express.static('uploads'))
+
 // Handle CORS Access
 app.use((request, response, next) => {
 	response.header('Access-Control-Allow-Headers', '*')

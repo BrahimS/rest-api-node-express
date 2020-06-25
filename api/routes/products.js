@@ -11,25 +11,37 @@ const storage = multer.diskStorage({
 		cb(null, Date.now() + '_' + file.originalname)
 	}
 })
+const fileFilter = (request, file, cb) => {
 
-const upload = multer({ storage: storage })
+		file.mimetype === 'images/jpeg' || file.mimetype === 'image/png' ? cb(null, true) :
+		cb(null, false)
+}
+
+const upload = multer({
+	storage    : storage,
+	limits     : {
+		fileSize : 1024 * 1024 * 5
+	},
+	fileFilter : fileFilter
+})
 const Product = require('../models/products')
 
 // Handle Products requests
 router.get('/', (request, response, next) => {
 	Product.find()
-		.select('name price desc _id')
+		.select('name price desc _id productImage')
 		.exec()
 		.then((docs) => {
 			const theResponse = {
 				count    : docs.length,
 				products : docs.map((doc) => {
 					return {
-						name    : doc.name,
-						price   : doc.price,
-						desc    : doc.desc,
-						_id     : doc._id,
-						request : {
+						_id          : doc._id,
+						name         : doc.name,
+						price        : doc.price,
+						desc         : doc.desc,
+						productImage : doc.productImage,
+						request      : {
 							type : 'GET',
 							url  : `http://localhost:3000/products/${doc._id}`
 						}
@@ -49,22 +61,23 @@ router.get('/', (request, response, next) => {
 router.post('/', upload.single('productImage'), (request, response, next) => {
 	console.log(request.file)
 	const product = new Product({
-		_id   : new mongoose.Types.ObjectId(),
-		name  : request.body.name,
-		price : request.body.price,
-		desc  : request.body.desc
+		_id          : new mongoose.Types.ObjectId(),
+		name         : request.body.name,
+		price        : request.body.price,
+		desc         : request.body.desc,
+		productImage : request.file.path
 	})
 	product
 		.save()
 		.then((result) => {
 			console.log(result)
 			response.status(201).json({
-				masssage       : 'Post data into the products page',
+				messsage       : 'Post data into the products page',
 				createdProduct : {
+					_id     : result._id,
 					name    : result.name,
 					price   : result.price,
 					desc    : result.desc,
-					_id     : result._id,
 					request : {
 						type : 'POST',
 						url  : `http://localhost:3000/products/${result._id}`
@@ -80,7 +93,7 @@ router.post('/', upload.single('productImage'), (request, response, next) => {
 router.get('/:productId', (request, response, next) => {
 	const id = request.params.productId
 	Product.findById(id)
-		.select('name price desc _id')
+		.select('name price desc _id productImage')
 		.exec()
 		.then((doc) => {
 			console.log(doc)
