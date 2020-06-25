@@ -4,6 +4,7 @@
 	"description": "Create a Restful Api with Node.js aand express.js",
 	"main": "app.js",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"express": "^4.17.1",
 		"mongoose": "^5.9.19",
 		"morgan": "^1.10.0",
