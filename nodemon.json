@@ -1,5 +1,6 @@
 {
 	"env": {
-		"MONGO_PASS": "3ufq9pZ3M5uYtdfd"
+		"MONGO_PASS": "3ufq9pZ3M5uYtdfd",
+		"JWT_PASS": "1234"
 	}
 }
