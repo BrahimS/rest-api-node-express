@@ -1,6 +1,6 @@
 // Orders mocks
 const mongoose = require("mongoose");
-const { request } = require("../../app");
+
 
 const orderSchema = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
@@ -12,4 +12,4 @@ const orderSchema = mongoose.Schema({
 	quantity: { type: Number, default: 1 },
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = mongoose.model("Order", orderSchema); 

@@ -45,6 +45,47 @@ router.post("/signup", (request, response, next) => {
 		});
 });
 
+router.post('/login', (request, response, next) => {
+	User.find({email: request.body.email} )
+		.exec()
+		.then( user => {
+			if(user .length < 1 ){
+			response.status(401)
+				.json({
+					message: 'Auth failed!'
+				})
+				
+			}
+			bcrypt.compare(request.body.password, user[0].password, (err, result) => {
+				if(err){
+					return response.status(401)
+					.json({
+						message: 'Auth failed!'
+					})
+					
+				}
+				if (result){
+					return response.status(200).json({
+						message: "Auth successful!"
+					})
+			
+				}
+				response.status(401)
+				.json({
+					message: 'Auth failed!'
+				})
+				
+			})
+		})
+		.catch(err => {
+			console.log(err)
+			response.status(500)
+				.json({
+					error: err
+				})
+		})
+})
+
 router.delete("/:userId", (request, response, next) => {
 	User.remove({ _id: request.params.userId })
 		.exec()
